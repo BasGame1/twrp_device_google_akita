@@ -7,10 +7,8 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - name: Maximize disk space
-            uses: pexcn/maximize-disk-space@v1.0.4
-            with : 
-                use-system-docker: # optional, default is true
+      - name: Maximize build disk space
+        uses: easimon/maximize-build-space@v10
           
 
       - name: Initializing environment and installing repo
