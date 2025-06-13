@@ -1,0 +1,62 @@
+# .github/workflows/build-twrp.yml
+name: Build TWRP for Pixel 8a (akita)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Initializing environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install git-core gnupg flex bison build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 libncurses5-dev lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig python3.10
+          git config --global user.name "Your Name"
+          git config --global user.email "your-email@example.com"
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ github.workflow }}-${{ runner.os }}
+          max-size: 2G
+
+      - name: Check out your device tree
+        uses: actions/checkout@v4
+        with:
+          path: device/google/akita
+
+      - name: Set up TWRP build environment
+        run: |
+          mkdir -p ~/twrp
+          cd ~/twrp
+          repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1 --depth=1
+          repo sync -j$(nproc --all)
+
+      - name: Clone hardware-specific repositories
+        run: |
+          cd ~/twrp
+          git clone https://github.com/Trijal08/twrp_device_google_zuma.git -b twrp-12.1 device/google/zuma
+          git clone https://github.com/Trijal08/twrp_hardware_google.git -b twrp-12.1 hardware/google
+
+      - name: Link your device tree into the build
+        run: |
+          # The checkout step already placed it correctly, so we'll just ensure it's there
+          cp -r ${GITHUB_WORKSPACE}/* ~/twrp/device/google/akita/
+
+      - name: Build TWRP
+        run: |
+          export CCACHE_EXEC=$(which ccache)
+          export USE_CCACHE=1
+          ccache -s
+          cd ~/twrp
+          source build/envsetup.sh
+          lunch twrp_akita-userdebug
+          mka recoveryimage
+
+      - name: Upload final recovery image
+        uses: actions/upload-artifact@v4
+        with:
+          name: recovery-image-akita
+          path: ~/twrp/out/target/product/akita/recovery.img
