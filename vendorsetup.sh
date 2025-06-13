@@ -67,7 +67,7 @@ else
     export BUILD_VATIANT_SELF=FOX
 fi
 echo "BUILD_VATIANT_SELF=${BUILD_VATIANT_SELF}"
-export TARGET_DEVICE_ALT="Pixel8Pro, Pixel8, GooglePixel8Pro, GooglePixel8, husky, Husky, shiba, Shiba, shusky, Shusky"
+export TARGET_DEVICE_ALT="Pixel8, GooglePixel8, Akita, AKITA, akita, GooglePixel8a, Pixel8a, Pixel 8a, pixel8a, googlepixel8a"
 if [ $BUILD_VATIANT_SELF == FOX ] ; then
     export FOX_VERSION="R12.1"
     export FOX_USE_SPECIFIC_MAGISK_ZIP=$fox_dir/device/google/shusky/included-stuff/Magisk/Magisk-v28.0.zip
@@ -82,7 +82,7 @@ if [ $BUILD_VATIANT_SELF == FOX ] ; then
     export FOX_USE_XZ_UTILS=1
     export FOX_USE_LZ4_BINARY=1
     export FOX_DELETE_AROMAFM=1
-    export TARGET_DEVICE_ALT="shiba"
+    export TARGET_DEVICE_ALT="akita"
 
     # instruct magiskboot v24+ to always patch the vbmeta header when patching the recovery/boot image; do *not* remove!
     export FOX_PATCH_VBMETA_FLAG="1"
