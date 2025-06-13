@@ -7,6 +7,6 @@
 
 LOCAL_PATH := $(call my-dir)
 
-ifeq ($(TARGET_DEVICE),shusky)
+ifeq ($(TARGET_DEVICE),akita)
 include $(call all-subdir-makefiles,$(LOCAL_PATH))
 endif
