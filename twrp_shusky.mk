@@ -10,7 +10,7 @@
 
 
 
-PRODUCT_RELEASE_NAME := shusky
+PRODUCT_RELEASE_NAME := akita
 
 DEVICE_PATH := device/google/$(PRODUCT_RELEASE_NAME)
 
@@ -24,7 +24,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
 
 ifeq ($(BUILD_VATIANT_SELF),FOX)
-    $(call inherit-product, $(DEVICE_PATH)/fox_shusky.mk)
+    $(call inherit-product, $(DEVICE_PATH)/fox_akita.mk)
     $(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
     $(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
     $(call inherit-product, $(SRC_TARGET_DIR)/product/generic_ramdisk.mk)
@@ -38,6 +38,6 @@ PRODUCT_NAME := twrp_$(PRODUCT_RELEASE_NAME)
 PRODUCT_DEVICE := $(PRODUCT_RELEASE_NAME)
 PRODUCT_BRAND := GOOGLE
 PRODUCT_MANUFACTURER := Google
-PRODUCT_MODEL := GOOGLE 8/8 PRO
+PRODUCT_MODEL := GOOGLE 8a
 
 PRODUCT_GMS_CLIENTID_BASE := android-google
