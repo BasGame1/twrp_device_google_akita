@@ -9,7 +9,15 @@ jobs:
     steps:
       - name: Maximize build disk space
         uses: easimon/maximize-build-space@v10
-          
+        with:
+          root-reserve-mb: 512
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+          remove-haskell: 'true'
+          remove-android: 'true'
+          remove-codeql: 'true'
+          remove-large-packages: 'true' # Add this if not present
+          remove-tool-cache: 'true' # Add this, can free up a lot of space          
 
       - name: Initializing environment and installing repo
         run: |
