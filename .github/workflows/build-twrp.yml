@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-       - name: Maximize Build Space
+      - name: Maximize Build Space
         uses: easimon/maximize-build-space-action@v10
         with:
           root-reserve-mb: 512
@@ -16,6 +16,7 @@ jobs:
           remove-haskell: 'true'
           remove-android: 'true'
           remove-codeql: 'true'
+
       - name: Initializing environment and installing repo
         run: |
           sudo apt-get update
