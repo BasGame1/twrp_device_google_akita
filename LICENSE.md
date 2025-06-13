@@ -1,5 +1,5 @@
 Licensed under the Thou Shalt Not Profit License version 1.5
-Copyright © 2022 Trijal08
+Copyright © 2025 Trijal08/BasGame1
 
 Disclaimer: I am not affiliated with ChefKiss Inc in any way.
 
