@@ -7,7 +7,7 @@
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += build.variant.self=$(BUILD_VATIANT_SELF)
 
-DEVICE_PATH := device/google/shusky
+DEVICE_PATH := device/google/akita
 
 PLATFORM_SECURITY_PATCH := 2099-12-31
 
@@ -90,6 +90,8 @@ else
     PRODUCT_SHIPPING_API_LEVEL := 30
     PRODUCT_TARGET_VNDK_VERSION := 31
     ENABLE_VIRTUAL_AB := true
+
+#look, mom. I'm famous ;)
 
 
 endif
