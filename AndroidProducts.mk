@@ -6,9 +6,9 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/twrp_shusky.mk
+    $(LOCAL_DIR)/twrp_akita.mk
 
 COMMON_LUNCH_CHOICES := \
-    twrp_shusky-user \
-    twrp_shusky-userdebug \
-    twrp_shusky-eng
+    twrp_akita-user \
+    twrp_akita-userdebug \
+    twrp_akita-eng
