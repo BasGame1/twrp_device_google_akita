@@ -10,7 +10,7 @@ jobs:
 
     steps:
           steps:
-      - name: Initializing environment and installing repo :)
+      - name: Initializing environment and installing repo
         run: |
           sudo apt-get update
           sudo apt-get install git-core gnupg flex bison build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 libncurses5-dev lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig python3.10
@@ -63,7 +63,7 @@ jobs:
           lunch twrp_akita-userdebug
           mka recoveryimage
 
-      - name: Upload final recovery image pls work :(
+      - name: Upload final recovery image pls work
         uses: actions/upload-artifact@v4
         with:
           name: recovery-image-akita
