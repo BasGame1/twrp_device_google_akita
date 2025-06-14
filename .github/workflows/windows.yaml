@@ -1,5 +1,5 @@
 name: Build TWRP for Pixel 8a (akita)
-
+runs-on: self-hosted,windows
 on:
   workflow_dispatch:
 
