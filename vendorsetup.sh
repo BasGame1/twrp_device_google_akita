@@ -64,18 +64,18 @@ sed -i 's/ || defined(RECOVERY_ABGR)//g' $fox_dir//bootable/recovery/minuitwrp/r
 #set -o xtrace
 export FOX_VENDOR_BOOT_RECOVERY=1
 export ALLOW_MISSING_DEPENDENCIES=true
-FDEVICE="shusky" # Keep this if it's supposed to be shusky here
+FDEVICE="akita" # Keep this if it's supposed to be shusky here
 
 if [ -d "$fox_dir/vendor/pb" ] ; then
     export BUILD_VATIANT_SELF=PB
 else
-    export BUILD_VATIANT_SELF=FOX
+   
 fi
 echo "BUILD_VATIANT_SELF=${BUILD_VATIANT_SELF}"
 export TARGET_DEVICE_ALT="Pixel8, GooglePixel8, Akita, AKITA, akita, GooglePixel8a, Pixel8a, Pixel 8a, pixel8a, googlepixel8a"
-if [ $BUILD_VATIANT_SELF == FOX ] ; then
+if [ $BUILD_VATIANT_SELF == "TWRP"] ; then
     export FOX_VERSION="R12.1"
-    export FOX_USE_SPECIFIC_MAGISK_ZIP=$fox_dir/device/google/shusky/included-stuff/Magisk/Magisk-v28.0.zip
+    export FOX_USE_SPECIFIC_MAGISK_ZIP=$fox_dir/device/google/akita/included-stuff/Magisk/Magisk-v28.0.zip
     export FOX_VANILLA_BUILD=1
     export FOX_ENABLE_APP_MANAGER=1
     export FOX_VIRTUAL_AB_DEVICE=1
@@ -93,7 +93,7 @@ if [ $BUILD_VATIANT_SELF == FOX ] ; then
     export FOX_PATCH_VBMETA_FLAG="1"
 fi
 
-echo 'Look, Mom. I'm on the internet'
+echo 'Look, Mom. Im on the internet'
 export | grep FOX
 export | grep OF_
 export | grep TARGET_
