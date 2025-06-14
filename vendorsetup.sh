@@ -1,4 +1,4 @@
-#!/bin/bash
+t#!/bin/bash
 
 fox_dir=$(pwd)
 
@@ -69,7 +69,7 @@ FDEVICE="akita" # Keep this if it's supposed to be shusky here
 if [ -d "$fox_dir/vendor/pb" ] ; then
     export BUILD_VATIANT_SELF=PB
 else
-   
+   export BUILD_VATIANT_SELF=OFOX
 fi
 echo "BUILD_VATIANT_SELF=${BUILD_VATIANT_SELF}"
 export TARGET_DEVICE_ALT="Pixel8, GooglePixel8, Akita, AKITA, akita, GooglePixel8a, Pixel8a, Pixel 8a, pixel8a, googlepixel8a"
