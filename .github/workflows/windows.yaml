@@ -1,0 +1,186 @@
+name: Build TWRP for Pixel 8a (akita)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    # IMPORTANT: Replace 'windows-latest' with 'self-hosted,windows'
+    # or just 'self-hosted' if your runner is tagged as such.
+    runs-on: self-hosted,windows
+    permissions:
+      contents: write # Needed for softprops/action-gh-release later
+
+    steps:
+      # Step 1: Maximize Build Space (using a Windows-compatible approach)
+      # On Windows, disk space management is less about partitioning and more about clearing temporary files.
+      # The swap space action is still useful.
+      - name: Set Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 12 # Allocate 12GB of swap space
+
+      # Step 2: Prepare the Environment (Windows-specific package installation)
+      - name: Prepare the environment for Windows
+        # We'll use PowerShell as the shell for package installations
+        shell: powershell
+        run: |
+          Write-Host "Installing Chocolatey packages..."
+          # Install common build tools via Chocolatey
+          # Run choco upgrade all to ensure it's up to date and then install specific packages
+          choco upgrade all -y --source "chocolatey"
+          choco install -y git make flex bison 7zip python --installargs 'ADD_TO_PATH' --params '"/Python38"' # Python for repo tool
+          choco install -y zulu11.jdk # Zulu OpenJDK 11, equivalent to apt install openjdk-11-jdk
+          choco install -y gnupg curl # curl might be alias to Invoke-WebRequest, or it installs a real curl
+          choco install -y sed # GNU sed for Windows
+          choco install -y grep # GNU grep for Windows
+          choco install -y wget # Often useful for downloads
+
+          # Verify installations
+          git --version
+          make --version
+          java -version
+          python --version
+          choco --version
+          gnupg --version
+          sed --version
+          grep --version
+
+          Write-Host "Setting up environment variables for build..."
+          # Set up PATH for tools installed by Chocolatey
+          # This might be handled by choco, but explicit PATH modification for the session is safer
+          # Usually choco manages PATH automatically, but ensuring build tools are in path is good.
+
+      # Step 3: Set up ccache (This action is cross-platform)
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: "${{ github.workflow }}-${{ runner.os }}"
+          max-size: 2G
+
+      # Step 4: Install repo tool (adapted for Windows)
+      - name: Install repo tool
+        # We'll use bash here as the `repo` script itself is a bash script
+        shell: bash
+        run: |
+          mkdir -p ~/bin
+          # Download the repo script (which is a Python script but run via bash)
+          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+          chmod a+x ~/bin/repo
+          # Add ~/bin to the PATH for the current shell session
+          echo "export PATH=$HOME/bin:$PATH" >> "$GITHUB_ENV"
+          # Set global git config (this is cross-platform)
+          git config --global user.name "Your Name"
+          git config --global user.email "your-email@example.com"
+          # Verify repo is in PATH
+          repo version || echo "Repo not found in PATH. Please verify installation."
+
+      # Step 5: Initialize repo
+      - name: Initialize repo
+        shell: bash # Use bash as repo init is a bash script
+        run: |
+          mkdir workspace
+          cd workspace
+          repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1 --depth=1
+        working-directory: ${{ github.workspace }} # Start from the repo root
+        id: pwd_workspace # Set an ID to reference the workspace path
+
+      # Step 6: Repo Sync
+      - name: Repo Sync
+        shell: bash # Use bash as repo sync is a bash script
+        run: |
+          # The convert.sh script for dependencies will run after repo sync if it's external.
+          # If it's part of your device tree, it will be called later.
+          repo sync -j$(nproc --all) --force-sync # nproc might not work, consider fixed number if issues.
+                                                 # On Windows bash, nproc might return empty or error.
+                                                 # Replace with -j8 or -j$(echo %NUMBER_OF_PROCESSORS%) if nproc fails.
+        working-directory: ${{ steps.pwd_workspace.outputs.workspace-folder }}
+
+      # Step 7: Clone device tree (This step is specific to your previous Linux YAML structure)
+      # Make sure your device/google/akita (containing vendorsetup.sh and twrp.dependencies)
+      # is either:
+      # A) Checked out by actions/checkout@v4 at the start (if it's in the same repo as this workflow)
+      # B) Cloned explicitly from its own URL as per workflow 2's structure.
+      # Assuming it's A) and part of the main checkout:
+      - name: Check out your device tree (if separate)
+        uses: actions/checkout@v4
+        with:
+          repository: your-username/your-akita-device-tree-repo # e.g. Trijal08/twrp_device_google_akita
+          ref: your-akita-device-tree-branch # e.g. twrp-12.1 or main
+          path: ${{ steps.pwd_workspace.outputs.workspace-folder }}/device/google/akita # Path inside the main workspace
+      # If your Akita device tree is ALREADY in the same repo as this workflow, you can skip this step,
+      # and the previous 'actions/checkout@v4' at the start of the job handles it.
+      # If it's *not* in the same repo, uncomment and fill in repository/ref.
+
+      # Step 8: Sync Device Dependencies (using convert.sh)
+      - name: Sync Device Dependencies
+        shell: bash # Use bash for convert.sh
+        run: |
+          # Assumes scripts/convert.sh is in YOUR main workflow repo.
+          # Assumes twrp.dependencies is in your device tree at device/google/akita/twrp.dependencies
+          bash ${{ github.workspace }}/scripts/convert.sh ${{ steps.pwd_workspace.outputs.workspace-folder }}/device/google/akita/twrp.dependencies
+          repo sync -j$(nproc --all) # Repeat repo sync to pull dependencies from local manifest
+        working-directory: ${{ steps.pwd_workspace.outputs.workspace-folder }}
+        continue-on-error: true # Keep this for debugging dependencies
+
+      # Step 9: Clone hardware-specific repositories (adjusting for Windows paths if needed)
+      - name: Clone hardware-specific repositories
+        shell: bash # Use bash
+        run: |
+          cd ~/twrp # This path is relative to the home directory of the runner, be careful!
+                    # It's better to use absolute path relative to workspace.
+          # Let's use the workspace path for consistency
+          cd ${{ steps.pwd_workspace.outputs.workspace-folder }}
+          # These should ideally be in your twrp.dependencies file instead of separate git clones
+          # However, if you prefer to keep them here for now:
+          git clone https://github.com/Trijal08/twrp_device_google_zuma.git -b twrp-12.1 device/google/zuma
+          git clone https://github.com/Trijal08/twrp_hardware_google.git -b twrp-12.1 hardware/google
+        working-directory: ${{ steps.pwd_workspace.outputs.workspace-folder }}
+
+      # Step 10: Link your device tree into the build
+      - name: Link your device tree into the build
+        shell: bash # Use bash
+        run: |
+          # This step also assumes your Akita device tree is separately cloned into
+          # ${GITHUB_WORKSPACE}/device/google/akita from your original repo.
+          # If it's already in the main workspace, the 'cp -r' might not be needed or the path needs adjustment.
+          # Let's assume your Akita device tree is pulled into ${{ steps.pwd_workspace.outputs.workspace-folder }}/device/google/akita
+          # and the TWRP build expects it to be there. No 'cp -r' is typically needed if paths align.
+          # If your original device tree is outside the main repo, adjust this.
+          echo "Assuming device tree is already in place by previous steps."
+          # If you *do* need to copy it from somewhere, ensure the source path is correct.
+          # Example: cp -r some/other/cloned/akita/device/tree/* ${{ steps.pwd_workspace.outputs.workspace-folder }}/device/google/akita/
+
+        working-directory: ${{ steps.pwd_workspace.outputs.workspace-folder }} # Ensure working directory is correct
+
+      # Step 11: Building recovery
+      - name: Building recovery
+        shell: bash # Crucial: Android build system requires bash or zsh
+        run: |
+          # Set environment for ccache (paths must be Windows-compatible for the actual tool)
+          export CCACHE_EXEC=$(which ccache)
+          export USE_CCACHE=1
+          ccache -s
+
+          # Navigate to the workspace (where the synced repo is)
+          cd ${{ steps.pwd_workspace.outputs.workspace-folder }}
+
+          # Source build/envsetup.sh (this will call vendorsetup.sh)
+          source build/envsetup.sh
+          export ALLOW_MISSING_DEPENDENCIES=true
+
+          # Lunch and Make commands
+          lunch twrp_akita-eng && make clean && make recoveryimage -j$(nproc --all)
+          # Note: nproc --all might still be an issue on Git Bash on Windows.
+          # If it fails, replace -j$(nproc --all) with -j8 or a fixed number.
+        working-directory: ${{ steps.pwd_workspace.outputs.workspace-folder }}
+
+      # Step 12: Upload final recovery image
+      - name: Upload final recovery image
+        uses: actions/upload-artifact@v4
+        with:
+          name: recovery-image-akita
+          # Note: Windows paths for the 'path' parameter for actions/upload-artifact
+          # are usually handled correctly by GitHub Actions.
+          # It understands the workspace structure regardless of OS.
+          path: ${{ steps.pwd_workspace.outputs.workspace-folder }}/out/target/product/akita/recovery.img
