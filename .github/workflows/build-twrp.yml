@@ -17,7 +17,7 @@ jobs:
         with:
           swap-size-gb: 12 # <--- ADD: Allocate 12GB of swap space
 
-     - name: Initializing environment and installing repo
+      - name: Initializing environment and installing repo
         run: |
           sudo apt-get update
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
