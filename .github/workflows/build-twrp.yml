@@ -5,28 +5,52 @@ on:
 
 jobs:
   build:
-    # IMPORTANT: Adjust these labels to exactly match your Kali Linux self-hosted runner's labels.
-    # Go to your GitHub repo's Settings > Actions > Runners to verify the labels.
-    # Common labels for Kali might be: [self-hosted, Linux, X64] or [self-hosted, kali]
-    runs-on: [self-hosted, Linux, X64] # <--- Please CONFIRM AND ADJUST THESE LABELS!
+    runs-on: [self-hosted, Linux, X64] # Your confirmed labels
     permissions:
-      contents: write # Required for actions/upload-artifact
+      contents: write
 
     steps:
-      # Step 1: Import Kali Linux GPG Key
-      # This fixes the "NO_PUBKEY" error by adding the repository's public key.
-      - name: Import Kali Linux GPG Key
-        shell: bash
+      # Step 1: Prepare the Kali Linux environment by installing necessary build tools.
+      # (GPG Key import is now moved into this step after gnupg installation)
+      - name: Prepare build environment on Kali Linux
+        shell: bash # Use Bash for standard Linux commands
         run: |
+          sudo apt-get update
+          DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
+            git-core gnupg flex bison build-essential zip curl zlib1g-dev \ # <-- gnupg is here
+            gcc-multilib g++-multilib libc6-dev-i386 libncurses5-dev \
+            x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc \
+            unzip fontconfig python3.10 \
+            gperf gcc-10-multilib g++-10-multilib lib32ncurses6-dev tree liblz4-tool \
+            libsdl1.2-dev build-essential libgtk-3-dev libglu1-mesa-dev freeglut3-dev \
+            imagemagick libbz2-dev lzma ncftp qemu-user-static libstdc++-10-dev \
+            libncurses6 python3 tar \
+            jq # 'jq' is needed if your 'convert.sh' script processes JSON dependencies
+
+          # Install OpenJDK 11
+          sudo apt-get install -y openjdk-11-jdk
+
+          echo "Core build tools installed."
+
+          # --- GPG Key Import (MOVED HERE) ---
           # This is the modern, recommended way to add the Kali archive key.
+          echo "Importing Kali Linux GPG key..."
           curl -fsSL https://archive.kali.org/archive-key.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/kali-archive-keyring.gpg
           echo "Kali Linux GPG key imported."
+          # --- END GPG Key Import ---
 
-      # Step 2: Set up a large swap file to aid with memory-intensive Android builds.
+          # Run apt-get update again to refresh after adding the key
+          sudo apt-get update
+
+          echo "Environment preparation complete."
+
+      # Step 2: Set Swap Space (Re-numbered, but still runs after environment setup)
       - name: Set Swap Space
         uses: pierotofy/set-swap-space@master
         with:
-          swap-size-gb: 12 # Allocates 12GB of swap space
+          swap-size-gb: 12
+
+      # ... (rest of your workflow continues as before, from Step 3: Set up ccache) ...
 
       # Step 3: Prepare the Kali Linux environment by installing necessary build tools.
       - name: Prepare build environment on Kali Linux
