@@ -17,15 +17,15 @@ jobs:
         with:
           swap-size-gb: 12 # <--- ADD: Allocate 12GB of swap space
 
-      - name: Initializing environment and installing repo
+     - name: Initializing environment and installing repo
         run: |
           sudo apt-get update
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
             git-core gnupg flex bison build-essential zip curl zlib1g-dev \
-            gcc-multilib g++-multilib libc6-dev-i386 libncurses5-dev \ # <--- Keep libncurses5-dev for host tools, but remove lib32ncurses5-dev
+            gcc-multilib g++-multilib libc6-dev-i386 libncurses5-dev \
             x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc \
             unzip fontconfig python3.10 \
-            gperf gcc-10-multilib g++-10-multilib lib32ncurses6-dev tree liblz4-tool \ # <--- CHANGED: lib32ncurses5-dev to lib32ncurses6-dev
+            gperf gcc-10-multilib g++-10-multilib lib32ncurses6-dev tree liblz4-tool \
             libsdl1.2-dev build-essential libgtk-3-dev libglu1-mesa-dev freeglut3-dev \
             imagemagick libbz2-dev lzma ncftp qemu-user-static libstdc++-10-dev \
             libncurses6 python3 tar
@@ -35,26 +35,6 @@ jobs:
           sudo ln -sf ~/bin/repo /usr/local/bin/repo
           git config --global user.name "Your Name"
           git config --global user.email "your-email@example.com"
-          echo "Setting up OpenJDK 11"
-          sudo apt-get install -y openjdk-11-jdk
-
-          # Install OpenJDK 11 as in workflow 2
-          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-          chmod a+x ~/bin/repo
-          sudo ln -sf ~/bin/repo /usr/local/bin/repo
-          git config --global user.name "Your Name"
-          git config --global user.email "your-email@example.com"
-          echo "Setting up OpenJDK 11"
-          sudo apt-get install -y openjdk-11-jdk
-
-          # Install OpenJDK 11 as in workflow 2
-          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-          chmod a+x ~/bin/repo
-          sudo ln -sf ~/bin/repo /usr/local/bin/repo
-          git config --global user.name "Your Name"
-          git config --global user.email "your-email@example.com"
-          # Adding OpenJDK setup here as it was a separate step in workflow 2
-          # Alternatively, you can use actions/setup-java@v4 as a separate step like in workflow 2
           echo "Setting up OpenJDK 11"
           sudo apt-get install -y openjdk-11-jdk
 
