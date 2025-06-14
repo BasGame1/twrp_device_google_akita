@@ -87,57 +87,13 @@ if [ $BUILD_VATIANT_SELF == FOX ] ; then
     export FOX_USE_XZ_UTILS=1
     export FOX_USE_LZ4_BINARY=1
     export FOX_DELETE_AROMAFM=1
-    # IMPORTANT: You have TARGET_DEVICE_ALT defined twice. The second one will override.
-    # Ensure 'akita' is the final intended value if you want it to be akita.
     export TARGET_DEVICE_ALT="akita"
 
     # instruct magiskboot v24+ to always patch the vbmeta header when patching the recovery/boot image; do *not* remove!
     export FOX_PATCH_VBMETA_FLAG="1"
 fi
 
-echo 'FUCK'
-export | grep FOX
-export | grep OF_
-export | grep TARGET_
-export | grep TW_
-
-export | grep _VERSION
-export | grep _API_LEVEL
-# export FOX_BUGGED_AOSP_ARB_WORKAROUND="1601559499"
-
-# export OF_QUICK_BACKUP_LIST="/boot;/init_boot;/vendor_boot;/vendor_kernel_boot"
-
-# # Magisk\\wsl.localhost\Fedora\home\leegar\fox_12.1\device\google\shusky\vendorsetup.sh
-# # \\wsl.localhost\Fedora\home\leegar\fox_12.1\device\google\shusky\included-staff\Magisk\Magisk-v28.0.zip
-# 
-
-# # Don't install AromaFM
-# export FOX_DELETE_AROMAFM=1
-
-# # Add some extras
-# export FOX_USE_ZIP_BINARY=1
-# export FOX_USE_TAR_BINARY=1
-# export FOX_USE_SED_BINARY=1
-# export FOX_USE_XZ_UTILS=1
-# export FOX_USE_LZ4_BINARY=1
-# export FOX_USE_ZSTD_BINARY=1
-# # export FOX_ASH_IS_BASH=1
-# export FOX_REPLACE_BUSYBOX_PS=1
-# # export FOX_USE_BASH_SHELL=1
-# export OF_USE_LZ4_COMPRESSION=1 
-# export FOX_USE_NANO_EDITOR=0
-# export OF_DONT_KEEP_LOG_HISTORY=1
-# export OF_SUPPORT_ALL_BLOCK_OTA_UPDATES=0
-# export FOX_INSTALLER_DISABLE_AUTOREBOOT=1
-# export OF_DISABLE_MIUI_SPECIFIC_FEATURES=1
-# export OF_ENABLE_FS_COMPRESSION=1
-# export FOX_REPLACE_TOOLBOX_GETPROP=1
-# # export FOX_BASH_TO_SYSTEM_BIN=1
-# # export FOX_ENABLE_APP_MANAGER=1
-# export FOX_VARIANT="default"
-# export OF_USE_GREEN_LED=1
-# export ALLOW_MISSING_DEPENDENCIES=true
-echo 'FUCK'
+echo 'Look, Mom. I'm on the internet'
 export | grep FOX
 export | grep OF_
 export | grep TARGET_
