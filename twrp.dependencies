@@ -29,26 +29,6 @@
     "target_path": "hardware/google/pixel",
     "branch": "13"
   },
-  {
-    "repository": "https://android.googlesource.com/device/google/gs",
-    "target_path": "device/google/gs",
-    "branch": "android-12.1.0_rX"
-  },
-  {
-    "repository": "https://android.googlesource.com/device/google/gsi",
-    "target_path": "device/google/gsi",
-    "branch": "android-12.1.0_rX" 
-  },
-  {
-    "repository": "https://android.googlesource.com/vendor/google/akita",
-    "target_path": "vendor/google/akita",
-    "branch": "android-12.1.0_rX" 
-  },
-  {
-    "repository": "https://android.googlesource.com/vendor/google/pixel",
-    "target_path": "vendor/google/pixel",
-    "branch": "android-12.1.0_rX" 
-  },
     {
     "repository": "https://android.googlesource.com/platform/hardware/interfaces",
     "target_path": "hardware/interfaces",
