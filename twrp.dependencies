@@ -1,0 +1,57 @@
+[
+  {
+    "repository": "https://android.googlesource.com/platform/build/make",
+    "target_path": "build/make",
+    "branch": "twrp-12.1"
+  },
+  {
+    "repository": "https://android.googlesource.com/platform/build/soong",
+    "target_path": "build/soong",
+    "branch": "twrp-12.1"
+  },
+  {
+    "repository": "https://github.com/Trijal08/twrp_hardware_google.git",
+    "target_path": "hardware/google",
+    "branch": "twrp-12.1"
+  },
+  {
+    "repository": "https://github.com/Trijal08/twrp_device_google_zuma.git",
+    "target_path": "device/google/zuma",
+    "branch": "twrp-12.1"
+  },
+  {
+    "repository": "https://android.googlesource.com/device/google/akita-kernel/",
+    "target_path": "kernel/google/akita",
+    "branch": "android14-qpr3-release"
+  },
+  {
+    "repository": "https://github.com/GrapheneOS/platform_hardware_google_pixel.git",
+    "target_path": "hardware/google/pixel",
+    "branch": "13"
+  },
+  {
+    "repository": "https://android.googlesource.com/device/google/gs",
+    "target_path": "device/google/gs",
+    "branch": "android-12.1.0_rX"
+  },
+  {
+    "repository": "https://android.googlesource.com/device/google/gsi",
+    "target_path": "device/google/gsi",
+    "branch": "android-12.1.0_rX" 
+  },
+  {
+    "repository": "https://android.googlesource.com/vendor/google/akita",
+    "target_path": "vendor/google/akita",
+    "branch": "android-12.1.0_rX" 
+  },
+  {
+    "repository": "https://android.googlesource.com/vendor/google/pixel",
+    "target_path": "vendor/google/pixel",
+    "branch": "android-12.1.0_rX" 
+  },
+    {
+    "repository": "https://android.googlesource.com/platform/hardware/interfaces",
+    "target_path": "hardware/interfaces",
+    "branch": "android14-release"
+  },
+]
