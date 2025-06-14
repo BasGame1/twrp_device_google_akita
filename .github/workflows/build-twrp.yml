@@ -11,13 +11,26 @@ jobs:
 
     steps:
       # Step 1: Prepare the Kali Linux environment by installing necessary build tools.
-      # (GPG Key import is now moved into this step after gnupg installation)
+      # (This step is now reordered to ensure GPG key import is effective)
       - name: Prepare build environment on Kali Linux
         shell: bash # Use Bash for standard Linux commands
         run: |
+          # --- IMPORTANT REORDERING ---
+          # 1. First, update and install essential tools for key import and basic ops
           sudo apt-get update
+          DEBIAN_FRONTEND=noninteractive sudo apt-get install -y curl gnupg
+
+          # 2. Now that curl and gnupg are installed, import the Kali Linux GPG Key
+          echo "Importing Kali Linux GPG key..."
+          curl -fsSL https://archive.kali.org/archive-key.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/kali-archive-keyring.gpg
+          echo "Kali Linux GPG key imported."
+
+          # 3. Run apt-get update again to refresh after adding the key (this should now succeed without GPG error)
+          sudo apt-get update
+
+          # 4. Install the rest of your build dependencies
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
-            git-core gnupg flex bison build-essential zip curl zlib1g-dev \ # <-- gnupg is here
+            git-core flex bison build-essential zip zlib1g-dev \
             gcc-multilib g++-multilib libc6-dev-i386 libncurses5-dev \
             x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc \
             unzip fontconfig python3.10 \
@@ -30,20 +43,13 @@ jobs:
           # Install OpenJDK 11
           sudo apt-get install -y openjdk-11-jdk
 
-          echo "Core build tools installed."
-
-          # --- GPG Key Import (MOVED HERE) ---
-          # This is the modern, recommended way to add the Kali archive key.
-          echo "Importing Kali Linux GPG key..."
-          curl -fsSL https://archive.kali.org/archive-key.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/kali-archive-keyring.gpg
-          echo "Kali Linux GPG key imported."
-          # --- END GPG Key Import ---
-
-          # Run apt-get update again to refresh after adding the key
-          sudo apt-get update
-
           echo "Environment preparation complete."
 
+      # Step 2: Set Swap Space (Re-numbered, but still runs after environment setup)
+      - name: Set Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 12
       # Step 2: Set Swap Space (Re-numbered, but still runs after environment setup)
       - name: Set Swap Space
         uses: pierotofy/set-swap-space@master
