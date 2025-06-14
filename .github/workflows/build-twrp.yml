@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04 # <--- CHANGE: Use ubuntu-24.04 for potentially more base space
+    runs-on: self-hosted # <--- CHANGE: Use ubuntu-24.04 for potentially more base space
     steps:
       # Use the slimhub_actions for cleanup, similar to workflow 2
       # This replaces easimon/maximize-build-space, as you want to adapt workflow 2's strategy
