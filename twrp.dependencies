@@ -34,4 +34,14 @@
     "target_path": "hardware/interfaces",
     "branch": "android14-release"
   },
+{
+    "repository": "https://github.com/TheMuppets/proprietary_vendor_google_akita.git",
+    "target_path": "vendor/google/akita",
+    "branch": "lineage-21"
+  },
+  {
+    "repository": "https://github.com/TheMuppets/proprietary_vendor_google_pixel.git",
+    "target_path": "vendor/google/pixel",
+    "branch": "lineage-21"
+  }
 ]
