@@ -1,4 +1,4 @@
-t#!/bin/bash
+#!/bin/bash
 
 fox_dir=$(pwd)
 
