@@ -73,7 +73,7 @@ else
 fi
 echo "BUILD_VATIANT_SELF=${BUILD_VATIANT_SELF}"
 export TARGET_DEVICE_ALT="Pixel8, GooglePixel8, Akita, AKITA, akita, GooglePixel8a, Pixel8a, Pixel 8a, pixel8a, googlepixel8a"
-if [ $BUILD_VATIANT_SELF == "OFOX"] ; then
+if [ $BUILD_VATIANT_SELF == "OFOX" ] ; then
     export FOX_VERSION="R12.1"
     export FOX_USE_SPECIFIC_MAGISK_ZIP=$fox_dir/device/google/akita/included-stuff/Magisk/Magisk-v28.0.zip
     export FOX_VANILLA_BUILD=1
